@@ -13,5 +13,31 @@ html = response.read()
 
 json1_data = json.loads(str(html.decode('UTF-8')))
 
-print(json1_data["coins"]["LBRY"])
+
+MyRates = dict()
+MyRates["Equihash"] = 3.4e3
+MyRates["Myriad-Groestl"] = 520e6
+
+
+for coin in json1_data["coins"].items():
+	CoinInfo = coin[1]
+	CoinName = coin[0]
+	if CoinInfo["algorithm"] in MyRates.keys():
+		if CoinInfo["tag"] != "NICEHASH":
+			CoinDifficulty = CoinInfo["difficulty"] 
+			CoinBlockTime = float(CoinInfo["block_time"])
+			CoinNetHashRate =float(CoinInfo["nethash"])
+			MyHashRate = MyRates[CoinInfo["algorithm"]]
+			CoinBlockSize = CoinInfo["block_reward"] 
+			CoinPrice = CoinInfo["exchange_rate"] 
+			BTC = 2450
+
+			A = CoinDifficulty / CoinBlockTime
+			B = MyHashRate / CoinNetHashRate
+			C = (60 / CoinBlockTime) * CoinBlockSize
+			D = B * C
+			E = D * 1440 * CoinPrice
+			Profit = E * BTC
+
+			print(CoinName, E, Profit, sep="\t")
 #print(str(html).decode())
