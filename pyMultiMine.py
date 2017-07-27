@@ -112,7 +112,7 @@ class Coin():
 MM = MultiMine()
 
 ZEC = Coin("ZEC", "Zcash")
-ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Rt5NcD7R7T63p4MJRazx6bqSS6e4PYF1v.IMGW --pass 2000 --port 3333 --intensity 64 --cuda_devices 1")
+ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1bXpK7mgBJo5hP1rSCU4s6cwekX6gXHG9x.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555")
 MM.AddCoin(ZEC)
 
 LBRY = Coin("LBRY", "LBRY")
