@@ -55,7 +55,7 @@ class MultiMine():
 					myCoin.SetHashRate(self.rates[CoinInfo["algorithm"]])
 					myCoin.CalcProfit()
 					with open(LogFileName, "a") as myfile:
-						myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit))
+						myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\t{2:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
 
 		self.coins.sort(key=lambda x: x.Profit, reverse=True)
 
@@ -70,7 +70,7 @@ class MultiMine():
 		if CoinToMine.ActiveMining:
 			print("\t", CoinToMine.FullName, " is allraedy mining")
 			with open(LogFileName, "a") as myfile:
-				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit))
+				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{2:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
 		else:
 			for myCoin in self.coins:
 				if myCoin.ActiveMining:
@@ -97,7 +97,7 @@ class Coin():
 			args = shlex.split(self.executable)
 			self.process = subprocess.Popen(args)
 			with open(LogFileName, "a") as myfile:
-				myfile.write("{0:s}\tstart\t{1:s}\t{2:8.6f}\n".format(datestr(), self.Name, self.Profit))
+				myfile.write("{0:s}\tstart\t{1:s}\t{2:8.6f}\t{2:8.6f}\n".format(datestr(), self.Name, self.Profit, self.ProfitBTC))
 
 	def StopMining(self):
 		if self.ActiveMining == True:
@@ -122,7 +122,8 @@ class Coin():
 		C = (60 / self.BlockTime) * self.BlockSize
 		D = B * C
 		E = D * 1440 * self.Price 
-		self.Profit = E
+		self.Profit = D * 1440
+		self.ProfitBTC = E
 
 	def Print(self):
 		print(self.Name, self.Profit)
