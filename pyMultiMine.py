@@ -1,5 +1,7 @@
 import json
 import urllib.request
+from time import sleep
+import shlex, subprocess
 
 class MultiMine():
 	def __init__(self):
@@ -49,15 +51,41 @@ class MultiMine():
 		for myCoin in self.coins:
 			myCoin.Print()
 
+	def MineMostProfitable(self):
+		CoinToMine = self.coins[0]
+		print("\tAttempt to start mining ", CoinToMine.FullName)
+		if CoinToMine.ActiveMining:
+			print("\t", CoinToMine.FullName, " is allraedy mining")
+		else:
+			for myCoin in self.coins:
+				if myCoin.ActiveMining:
+					myCoin.StopMining()
+					print("\tAttempt to stop mining ", myCoin.FullName)
+			CoinToMine.StartMining()
+			print("\tStart mining ", CoinToMine.FullName)
+			print()
+
 
 class Coin():
 	def __init__(self, Name, FullName):
 		self.Name = Name
 		self.FullName = FullName
 		self.Profit = 0
+		self.ActiveMining = False
 
 	def SetExecutable(self, executable):
 		self.executable = executable
+
+	def StartMining(self):
+		if self.ActiveMining == False:
+			self.ActiveMining = True
+			args = shlex.split(self.executable)
+			self.process = subprocess.Popen(args)
+
+	def StopMining(self):
+		if self.ActiveMining == True:
+			self.process.terminate()
+			self.ActiveMining = False
 
 	def SetMiningParameters(self, Difficulty, BlockTime, NetHashRate, BlockSize, Price):
 		self.Difficulty = Difficulty
@@ -84,18 +112,22 @@ class Coin():
 MM = MultiMine()
 
 ZEC = Coin("ZEC", "Zcash")
-ZEC.SetExecutable("")
+ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Rt5NcD7R7T63p4MJRazx6bqSS6e4PYF1v.IMGW --pass 2000 --port 3333 --intensity 64 --cuda_devices 1")
 MM.AddCoin(ZEC)
 
 LBRY = Coin("LBRY", "LBRY")
-LBRY.SetExecutable("")
+LBRY.SetExecutable("/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.suprnova.cc:6256 -u gozwei.rig1 -p x")
 MM.AddCoin(LBRY)
 
 DGB = Coin("DGB", "DGB-Groestl")
-DGB.SetExecutable("")
+DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
 MM.AddCoin(DGB)
 
 
-MM.GetCoinStats()
+while True:
+	MM.GetCoinStats()
+	MM.MineMostProfitable()
+	sleep(60)
+
 
 MM.Print()
