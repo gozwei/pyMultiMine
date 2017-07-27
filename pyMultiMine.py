@@ -164,8 +164,8 @@ LBRY.SetExecutable("/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.sup
 MM.AddCoin(LBRY)
 
 DGB = Coin("DGB", "DGB-Groestl")
-#DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
-DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p x")
+DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
+#DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p x")
 MM.AddCoin(DGB)
 
 
