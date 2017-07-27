@@ -5,14 +5,30 @@ import shlex, subprocess
 import time
 import datetime
 
-def datestr(type="std"):
+def datestr(format="std"):
 	ts = time.time()
-	if type == "file":
-		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S') + ".log"
+	if format == "file":
+		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
 	else:
 		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
-LogFileName = datestr(type="file")
+def GetURL(url):
+	try:
+		hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+			   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			   'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+			   'Accept-Encoding': 'none',
+			   'Accept-Language': 'en-US,en;q=0.8',
+			   'Connection': 'keep-alive'}
+
+		response = urllib.request.Request(url,headers=hdr)
+		response = urllib.request.urlopen(response)
+		html = response.read()
+		return str(html.decode('UTF-8'))
+	except:
+		return "Error"
+
+LogFileName = datestr(format="file") + ".log"
 
 class MultiMine():
 	def __init__(self):
@@ -28,34 +44,37 @@ class MultiMine():
 		self.coins.append(coin)
 
 	def GetCoinStats(self):
-		hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-		   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-		   'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-		   'Accept-Encoding': 'none',
-		   'Accept-Language': 'en-US,en;q=0.8',
-		   'Connection': 'keep-alive'}
-
-		response = urllib.request.Request('https://www.whattomine.com/coins.json#',headers=hdr)
-		response = urllib.request.urlopen(response)
-		html = response.read()
-		json1_data = json.loads(str(html.decode('UTF-8')))
-		for myCoin in self.coins:
-			# print('Looking for ', myCoin.Name)
-			for coin in json1_data["coins"].items():
-				CoinInfo = coin[1]
-				CoinName = coin[0]
-				# print(CoinName, CoinName == myCoin.FullName)
-				if CoinName == myCoin.FullName:
-					Difficulty = CoinInfo["difficulty"] 
-					BlockTime = float(CoinInfo["block_time"])
-					NetHashRate =float(CoinInfo["nethash"])
-					BlockSize = CoinInfo["block_reward"] 
-					Price = CoinInfo["exchange_rate"] 
-					myCoin.SetMiningParameters(Difficulty, BlockTime, NetHashRate, BlockSize, Price)
-					myCoin.SetHashRate(self.rates[CoinInfo["algorithm"]])
-					myCoin.CalcProfit()
+		html = GetURL("https://www.whattomine.com/coins.json")
+		if html != "Error":
+			json1_data = json.loads(html)
+			for myCoin in self.coins:
+				# print('Looking for ', myCoin.Name)
+				for coin in json1_data["coins"].items():
+					CoinInfo = coin[1]
+					CoinName = coin[0]
+					# print(CoinName, CoinName == myCoin.FullName)
+					if CoinName == myCoin.FullName:
+						Difficulty = CoinInfo["difficulty"] 
+						BlockTime = float(CoinInfo["block_time"])
+						NetHashRate =float(CoinInfo["nethash"])
+						BlockSize = CoinInfo["block_reward"] 
+						Price = CoinInfo["exchange_rate"] 
+						myCoin.SetMiningParameters(Difficulty, BlockTime, NetHashRate, BlockSize, Price)
+						myCoin.SetHashRate(self.rates[CoinInfo["algorithm"]])
+						myCoin.CalcProfit()
+						with open(LogFileName, "a") as myfile:
+							myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
+		else:
+			for myCoin in self.coins:
+				if myCoin.Default:
+					myCoin.Profit = 0
+					myCoin.ProfitBTC = 0
 					with open(LogFileName, "a") as myfile:
-						myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
+						myfile.write("{0:s}\terror fetching data, mining default\t{1:s}\n".format(datestr(), myCoin.Name))
+				else:
+					myCoin.Profit = -1
+					myCoin.ProfitBTC = -1
+
 
 		self.coins.sort(key=lambda x: x.ProfitBTC, reverse=True)
 
@@ -87,6 +106,10 @@ class Coin():
 		self.FullName = FullName
 		self.Profit = 0
 		self.ActiveMining = False
+		self.Default = False
+
+	def SetAsDefault(self):
+		self.Default = True
 
 	def SetExecutable(self, executable):
 		self.executable = executable
@@ -132,6 +155,7 @@ class Coin():
 MM = MultiMine()
 
 ZEC = Coin("ZEC", "Zcash")
+ZEC.SetAsDefault()
 ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1bXpK7mgBJo5hP1rSCU4s6cwekX6gXHG9x.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555")
 MM.AddCoin(ZEC)
 
