@@ -2,6 +2,17 @@ import json
 import urllib.request
 from time import sleep
 import shlex, subprocess
+import time
+import datetime
+
+def datestr(type="std"):
+	ts = time.time()
+	if type == "file":
+		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S') + ".log"
+	else:
+		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+
+LogFileName = datestr(type="file")
 
 class MultiMine():
 	def __init__(self):
@@ -18,11 +29,11 @@ class MultiMine():
 
 	def GetCoinStats(self):
 		hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-           'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-           'Accept-Encoding': 'none',
-           'Accept-Language': 'en-US,en;q=0.8',
-           'Connection': 'keep-alive'}
+		   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+		   'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+		   'Accept-Encoding': 'none',
+		   'Accept-Language': 'en-US,en;q=0.8',
+		   'Connection': 'keep-alive'}
 
 		response = urllib.request.Request('https://www.whattomine.com/coins.json#',headers=hdr)
 		response = urllib.request.urlopen(response)
@@ -43,6 +54,8 @@ class MultiMine():
 					myCoin.SetMiningParameters(Difficulty, BlockTime, NetHashRate, BlockSize, Price)
 					myCoin.SetHashRate(self.rates[CoinInfo["algorithm"]])
 					myCoin.CalcProfit()
+					with open(LogFileName, "a") as myfile:
+						myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit))
 
 		self.coins.sort(key=lambda x: x.Profit, reverse=True)
 
@@ -56,6 +69,8 @@ class MultiMine():
 		print("\tAttempt to start mining ", CoinToMine.FullName)
 		if CoinToMine.ActiveMining:
 			print("\t", CoinToMine.FullName, " is allraedy mining")
+			with open(LogFileName, "a") as myfile:
+				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit))
 		else:
 			for myCoin in self.coins:
 				if myCoin.ActiveMining:
@@ -81,11 +96,15 @@ class Coin():
 			self.ActiveMining = True
 			args = shlex.split(self.executable)
 			self.process = subprocess.Popen(args)
+			with open(LogFileName, "a") as myfile:
+				myfile.write("{0:s}\tstart\t{1:s}\t{2:8.6f}\n".format(datestr(), self.Name, self.Profit))
 
 	def StopMining(self):
 		if self.ActiveMining == True:
 			self.process.terminate()
 			self.ActiveMining = False
+			with open(LogFileName, "a") as myfile:
+				myfile.write("{0:s}\tstop\t{1:s}\n".format(datestr(), self.Name))
 
 	def SetMiningParameters(self, Difficulty, BlockTime, NetHashRate, BlockSize, Price):
 		self.Difficulty = Difficulty
