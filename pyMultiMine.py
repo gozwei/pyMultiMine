@@ -57,7 +57,7 @@ class MultiMine():
 					with open(LogFileName, "a") as myfile:
 						myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
 
-		self.coins.sort(key=lambda x: x.Profit, reverse=True)
+		self.coins.sort(key=lambda x: x.ProfitBTC, reverse=True)
 
 	def Print(self):
 
