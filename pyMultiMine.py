@@ -106,6 +106,7 @@ class MultiMine():
 						print("\tAttempt to stop mining ", myCoin.FullName)
 			if number_running == 0:
 				stopped = True
+			print(number_running, stopped)
 			if stopped:
 				CoinToMine.StartMining()
 				print("\tStart mining ", CoinToMine.FullName)
