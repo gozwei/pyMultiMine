@@ -99,7 +99,7 @@ class MultiMine():
 					if (time.time() - myCoin.ActiveMiningTime) < myCoin.MinimumMineTime:
 						print("\tTo short time to stop mining ", myCoin.FullName)
 						with open(LogFileName, "a") as myfile:
-							myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
+							myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
 					else:
 						myCoin.StopMining()
 						stopped = True
@@ -130,6 +130,7 @@ class Coin():
 
 	def StartMining(self):
 		if self.ActiveMining == False:
+			sleep(3)
 			self.ActiveMining = True
 			args = shlex.split(self.executable)
 			self.process = subprocess.Popen(args)
