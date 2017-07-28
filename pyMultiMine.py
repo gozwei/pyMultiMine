@@ -92,8 +92,10 @@ class MultiMine():
 				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
 		else:
 			stopped = False
+			number_running = 0
 			for myCoin in self.coins:
 				if myCoin.ActiveMining:
+					number_running += 1
 					if (time.time() - myCoin.ActiveMiningTime) < myCoin.MinimumMineTime:
 						print("\tTo short time to stop mining ", myCoin.FullName)
 						with open(LogFileName, "a") as myfile:
@@ -102,6 +104,8 @@ class MultiMine():
 						myCoin.StopMining()
 						stopped = True
 						print("\tAttempt to stop mining ", myCoin.FullName)
+			if number_running == 0:
+				stopped = True
 			if stopped:
 				CoinToMine.StartMining()
 				print("\tStart mining ", CoinToMine.FullName)
