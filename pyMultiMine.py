@@ -37,7 +37,7 @@ class MultiMine():
 
 		self.rates = dict()
 		self.rates["Equihash"] = 3.4e3
-		self.rates["Myriad-Groestl"] = 520e6
+		self.rates["Myriad-Groestl"] = 290e6#520e6
 		self.rates["LBRY"] = 2323e6
 
 	def AddCoin(self, coin):
@@ -176,7 +176,7 @@ ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.
 MM.AddCoin(ZEC)
 
 LBRY = Coin("LBRY", "LBRY")
-LBRY.SetExecutable("/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.suprnova.cc:6256 -u gozwei.rig1 -p x")
+LBRY.SetExecutable("/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.suprnova.cc:6256 -u gozwei.rig1 -p d=128")
 MM.AddCoin(LBRY)
 
 DGB = Coin("DGB", "DGB-Groestl")
