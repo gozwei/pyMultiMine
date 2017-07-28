@@ -120,7 +120,7 @@ class Coin():
 		self.Profit = 0
 		self.ActiveMining = False
 		self.Default = False
-		self.MinimumMineTime = 250
+		self.MinimumMineTime = 30*60
 
 	def SetAsDefault(self):
 		self.Default = True
@@ -172,7 +172,8 @@ MM = MultiMine()
 
 ZEC = Coin("ZEC", "Zcash")
 ZEC.SetAsDefault()
-ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1bXpK7mgBJo5hP1rSCU4s6cwekX6gXHG9x.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555")
+#ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1bXpK7mgBJo5hP1rSCU4s6cwekX6gXHG9x.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555")
+ZEC.SetExecutable("/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Wa6JG1w3m9d81q78Mg2uockRVZ6vuoE6L.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555")
 MM.AddCoin(ZEC)
 
 LBRY = Coin("LBRY", "LBRY")
@@ -182,7 +183,7 @@ MM.AddCoin(LBRY)
 DGB = Coin("DGB", "DGB-Groestl")
 #DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
 DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p d=0.03")
-MM.AddCoin(DGB)
+#MM.AddCoin(DGB)
 
 
 while True:
