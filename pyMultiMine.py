@@ -91,13 +91,18 @@ class MultiMine():
 			with open(LogFileName, "a") as myfile:
 				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
 		else:
-			for myCoin in self.coins:
-				if myCoin.ActiveMining:
-					myCoin.StopMining()
-					print("\tAttempt to stop mining ", myCoin.FullName)
-			CoinToMine.StartMining()
-			print("\tStart mining ", CoinToMine.FullName)
-			print()
+			if (time.time() - myCoin.ActiveMiningTime) < myCoin.MinimumMineTime:
+				print("\tTo short time to stop mining ", myCoin.FullName)
+				with open(LogFileName, "a") as myfile:
+					myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
+			else:
+				for myCoin in self.coins:
+					if myCoin.ActiveMining:
+						myCoin.StopMining()
+						print("\tAttempt to stop mining ", myCoin.FullName)
+				CoinToMine.StartMining()
+				print("\tStart mining ", CoinToMine.FullName)
+				print()
 
 
 class Coin():
@@ -107,6 +112,7 @@ class Coin():
 		self.Profit = 0
 		self.ActiveMining = False
 		self.Default = False
+		self.MinimumMineTime = 250
 
 	def SetAsDefault(self):
 		self.Default = True
@@ -121,6 +127,7 @@ class Coin():
 			self.process = subprocess.Popen(args)
 			with open(LogFileName, "a") as myfile:
 				myfile.write("{0:s}\tstart\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), self.Name, self.Profit, self.ProfitBTC))
+			self.ActiveMiningTime = time.time()
 
 	def StopMining(self):
 		if self.ActiveMining == True:
@@ -165,7 +172,7 @@ MM.AddCoin(LBRY)
 
 DGB = Coin("DGB", "DGB-Groestl")
 #DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
-DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p x")
+DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p d=0.03")
 MM.AddCoin(DGB)
 
 
