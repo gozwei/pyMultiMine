@@ -5,7 +5,8 @@
 			"Default": 1,
 			"Enabled": 1,
 			"Executable": "/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Wa6JG1w3m9d81q78Mg2uockRVZ6vuoE6L.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555",
-			"HashRate": 3.4e3
+			"HashRate": 3.4e3,
+			"MinMineTime": 180
 		},
 
 		"LBRY":{
@@ -13,7 +14,8 @@
 			"Default": 0,
 			"Enabled": 1,
 			"Executable": "/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.suprnova.cc:6256 -u gozwei.rig1 -p d=128",
-			"HashRate": 2323e6
+			"HashRate": 2323e6,
+			"MinMineTime": 180
 		},
 
 		"DGB":{
@@ -21,7 +23,8 @@
 			"Default": 0,
 			"Enabled": 1,
 			"Executable": "/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p d=0.03",
-			"HashRate": 520e6
+			"HashRate": 520e6,
+			"MinMineTime": 180
 		},
 
 		"FTC":{
@@ -29,7 +32,8 @@
 			"Default": 0,
 			"Enabled": 0,
 			"Executable": "/home/goto/ccminer/ccminer -a neoscrypt -o stratum+tcp://hub.miningpoolhub.com:20510 -u gozwei.rig1 -p x",
-			"HashRate": 6600e3
+			"HashRate": 6600e3,
+			"MinMineTime": 180
 		}
 
 	}
