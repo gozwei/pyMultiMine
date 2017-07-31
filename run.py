@@ -1,6 +1,8 @@
 import json
 import os.path
 import sys
+from MultiMine import MultiMine
+from MultiMineCoin import Coin
 
 if len(sys.argv) < 2:
 	print("No config specified!")
@@ -18,6 +20,10 @@ with open(ConfigFile) as ConfigFileHandle:
 print(Config)
 print()
 
-for Coin in Config['coins']:
-	print(Coin)
-	print(Config['coins'][Coin])
+MM = MultiMine()
+
+for CoinName in Config['coins']:
+	print(CoinName, Config['coins'][CoinName]["FullName"])
+	C = Coin(CoinName, Config['coins'][CoinName]["FullName"])
+
+	# print(Config['coins'][Coin])
