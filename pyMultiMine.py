@@ -8,7 +8,7 @@ import datetime
 def datestr(format="std"):
 	ts = time.time()
 	if format == "file":
-		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
+		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
 	else:
 		return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -37,7 +37,7 @@ class MultiMine():
 
 		self.rates = dict()
 		self.rates["Equihash"] = 3.4e3
-		self.rates["Myriad-Groestl"] = 290e6#520e6
+		self.rates["Myriad-Groestl"] = 520e6
 		self.rates["LBRY"] = 2323e6
 		self.rates["NeoScrypt"] = 6600e3
 
@@ -182,8 +182,8 @@ LBRY.SetExecutable("/home/goto/ccminer/ccminer -a lbry -o stratum+tcp://lbry.sup
 MM.AddCoin(LBRY)
 
 DGB = Coin("DGB", "DGB-Groestl")
-#DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p x")
-DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p d=0.03")#MM.AddCoin(DGB)
+DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://dgbg.suprnova.cc:7978 -u gozwei.rig1 -p d=0.03")
+#DGB.SetExecutable("/home/goto/ccminer/ccminer -a myr-gr -o stratum+tcp://hub.miningpoolhub.com:20499 -u gozwei.rig1 -p d=0.03")
 MM.AddCoin(DGB)
 
 #DGB = Coin("FTC", "Feathercoin")
