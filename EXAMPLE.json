@@ -1,4 +1,8 @@
 {
+	"config":{
+		"CheckCoinsEvery": 60,
+		"BTCUSDMarket": "kraken"
+	},
 	"coins":{
 		"ZEC":{
 			"FullName": "Zcash",

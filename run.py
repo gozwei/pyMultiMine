@@ -1,6 +1,7 @@
 import json
 import os.path
 import sys
+from time import sleep
 from MultiMine import MultiMine
 from MultiMineCoin import Coin
 
@@ -17,13 +18,20 @@ if not os.path.isfile(ConfigFile):
 with open(ConfigFile) as ConfigFileHandle:    
     Config = json.load(ConfigFileHandle)
 
-print(Config)
-print()
-
 MM = MultiMine()
 
 for CoinName in Config['coins']:
-	print(CoinName, Config['coins'][CoinName]["FullName"])
-	C = Coin(CoinName, Config['coins'][CoinName]["FullName"])
+	if Config['coins'][CoinName]["Enabled"]:
+		C = Coin(CoinName, Config['coins'][CoinName]["FullName"])
+		C.SetHashRate(Config['coins'][CoinName]["HashRate"])
+		C.SetExecutable(Config['coins'][CoinName]["Executable"])
+		if Config['coins'][CoinName]["Default"]:
+			C.SetAsDefault()
+		C.SetMinimumMineTime(Config['coins'][CoinName]["MinMineTime"])
+		MM.AddCoin(C)
 
-	# print(Config['coins'][Coin])
+while True:
+	MM.GetBTCUSD()
+	MM.GetCoinStats()
+	MM.MineMostProfitable()
+	sleep(Config['config']['CheckCoinsEvery'])

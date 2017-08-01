@@ -21,22 +21,23 @@ class Coin():
 	def SetExecutable(self, executable):
 		self.executable = executable
 
+	def SetMinimumMineTime(self, MinimumMineTime):
+		self.MinimumMineTime = MinimumMineTime
+
 	def StartMining(self):
 		if self.ActiveMining == False:
 			sleep(3)
 			self.ActiveMining = True
 			args = shlex.split(self.executable)
-			self.process = subprocess.Popen(args)
-			with open(LogFileName, "a") as myfile:
-				myfile.write("{0:s}\tstart\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), self.Name, self.Profit, self.ProfitBTC))
+			#self.process = subprocess.Popen(args)
+			Common.Log("Start: {0:6s}\t{1:12.6f}\t{2:12.6f}".format(self.Name, self.Profit, self.ProfitBTC))
 			self.ActiveMiningTime = time.time()
 
 	def StopMining(self):
 		if self.ActiveMining == True:
-			self.process.terminate()
+			#self.process.terminate()
 			self.ActiveMining = False
-			with open(LogFileName, "a") as myfile:
-				myfile.write("{0:s}\tstop\t{1:s}\n".format(datestr(), self.Name))
+			Common.Log("Stop: {0:6s}".format(self.Name))
 
 	def SetMiningParameters(self, Difficulty, BlockTime, NetHashRate, BlockSize, Price):
 		self.Difficulty = Difficulty

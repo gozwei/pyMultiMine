@@ -8,46 +8,41 @@ from MultiMineCommon import Common
 
 class MultiMine():
 	def __init__(self):
-		print('Multi Miner initiated')
+		Common.Log('Multi Miner initiated')
 		self.coins = []
-
-		self.rates = dict()
-		self.rates["Equihash"] = 3.4e3
-		self.rates["Myriad-Groestl"] = 520e6
-		self.rates["LBRY"] = 2323e6
-		self.rates["NeoScrypt"] = 6600e3
+		self.BTCUSD = 0
 
 	def AddCoin(self, coin):
 		self.coins.append(coin)
 
+	def GetBTCUSD(self):
+		html = Common.GetURL("https://api.cryptowat.ch/markets/kraken/btcusd/price")
+		data = json.loads(html)
+		self.BTCUSD = float(data["result"]["price"])
+		Common.Log("BTC/USD: {0:8.4f}".format(self.BTCUSD))
+
 	def GetCoinStats(self):
-		html = GetURL("https://www.whattomine.com/coins.json")
+		html = Common.GetURL("https://www.whattomine.com/coins.json")
 		if html != "Error":
-			json1_data = json.loads(html)
+			data = json.loads(html)
 			for myCoin in self.coins:
-				# print('Looking for ', myCoin.Name)
-				for coin in json1_data["coins"].items():
-					CoinInfo = coin[1]
-					CoinName = coin[0]
-					# print(CoinName, CoinName == myCoin.FullName)
-					if CoinName == myCoin.FullName:
-						Difficulty = CoinInfo["difficulty"] 
-						BlockTime = float(CoinInfo["block_time"])
-						NetHashRate =float(CoinInfo["nethash"])
-						BlockSize = CoinInfo["block_reward"] 
-						Price = CoinInfo["exchange_rate"] 
-						myCoin.SetMiningParameters(Difficulty, BlockTime, NetHashRate, BlockSize, Price)
-						myCoin.SetHashRate(self.rates[CoinInfo["algorithm"]])
-						myCoin.CalcProfit()
-						with open(LogFileName, "a") as myfile:
-							myfile.write("{0:s}\tprofit\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
+				Difficulty = data["coins"][myCoin.FullName]["difficulty"] 
+				BlockTime = float(data["coins"][myCoin.FullName]["block_time"])
+				NetHashRate =float(data["coins"][myCoin.FullName]["nethash"])
+				BlockSize = data["coins"][myCoin.FullName]["block_reward"] 
+				Price = data["coins"][myCoin.FullName]["exchange_rate"] 
+				myCoin.SetMiningParameters(Difficulty, BlockTime, NetHashRate, BlockSize, Price)
+
+				myCoin.CalcProfit()
+
+				Common.Log("Profit 24h: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
 		else:
 			for myCoin in self.coins:
 				if myCoin.Default:
 					myCoin.Profit = 0
 					myCoin.ProfitBTC = 0
-					with open(LogFileName, "a") as myfile:
-						myfile.write("{0:s}\terror fetching data, mining default\t{1:s}\n".format(datestr(), myCoin.Name))
+					# with open(LogFileName, "a") as myfile:
+					# 	myfile.write("{0:s}\terror fetching data, mining default\t{1:s}\n".format(datestr(), myCoin.Name))
 				else:
 					myCoin.Profit = -1
 					myCoin.ProfitBTC = -1
@@ -62,11 +57,12 @@ class MultiMine():
 
 	def MineMostProfitable(self):
 		CoinToMine = self.coins[0]
-		print("\tAttempt to start mining ", CoinToMine.FullName)
+		Common.Log("Attempt to start mining " + CoinToMine.FullName)
 		if CoinToMine.ActiveMining:
-			print("\t", CoinToMine.FullName, " is allraedy mining")
-			with open(LogFileName, "a") as myfile:
-				myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
+			Common.Log(CoinToMine.FullName + " is allraedy mining")
+			# with open(LogFileName, "a") as myfile:
+			# 	myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
+			Common.Log("Continue: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}".format(CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC, CoinToMine.ProfitBTC*self.BTCUSD))
 		else:
 			stopped = False
 			number_running = 0
@@ -74,17 +70,16 @@ class MultiMine():
 				if myCoin.ActiveMining:
 					number_running += 1
 					if (time.time() - myCoin.ActiveMiningTime) < myCoin.MinimumMineTime:
-						print("\tTo short time to stop mining ", myCoin.FullName)
-						with open(LogFileName, "a") as myfile:
-							myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
+						Common.Log("To short time to stop mining ", myCoin.FullName)
+						# with open(LogFileName, "a") as myfile:
+						# 	myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
+						Common.Log("Continue time: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}".format(CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC, CoinToMine.ProfitBTC*self.BTCUSD))
 					else:
 						myCoin.StopMining()
 						stopped = True
-						print("\tAttempt to stop mining ", myCoin.FullName)
+						Common.Log("Attempt to stop mining ", myCoin.FullName)
 			if number_running == 0:
 				stopped = True
-			print(number_running, stopped)
 			if stopped:
 				CoinToMine.StartMining()
-				print("\tStart mining ", CoinToMine.FullName)
-				print()
+				Common.Log("Start mining ", CoinToMine.FullName)
