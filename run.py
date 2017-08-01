@@ -19,6 +19,8 @@ with open(ConfigFile) as ConfigFileHandle:
     Config = json.load(ConfigFileHandle)
 
 MM = MultiMine()
+if Config['config']['DryRun'] == 1:
+	MM.SetDryRun()
 
 for CoinName in Config['coins']:
 	if Config['coins'][CoinName]["Enabled"]:

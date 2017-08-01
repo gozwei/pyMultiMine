@@ -24,18 +24,20 @@ class Coin():
 	def SetMinimumMineTime(self, MinimumMineTime):
 		self.MinimumMineTime = MinimumMineTime
 
-	def StartMining(self):
+	def StartMining(self, DryRun):
 		if self.ActiveMining == False:
 			sleep(3)
 			self.ActiveMining = True
 			args = shlex.split(self.executable)
-			#self.process = subprocess.Popen(args)
+			if not DryRun:
+				self.process = subprocess.Popen(args)
 			Common.Log("Start: {0:6s}\t{1:12.6f}\t{2:12.6f}".format(self.Name, self.Profit, self.ProfitBTC))
 			self.ActiveMiningTime = time.time()
 
-	def StopMining(self):
+	def StopMining(self, DryRun):
 		if self.ActiveMining == True:
-			#self.process.terminate()
+			if not DryRun:
+				self.process.terminate()
 			self.ActiveMining = False
 			Common.Log("Stop: {0:6s}".format(self.Name))
 

@@ -1,7 +1,8 @@
 {
 	"config":{
 		"CheckCoinsEvery": 60,
-		"BTCUSDMarket": "kraken"
+		"BTCUSDMarket": "kraken",
+		"DryRun": 0
 	},
 	"coins":{
 		"ZEC":{

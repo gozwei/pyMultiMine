@@ -27,7 +27,7 @@ class Common():
 
 	def Log(message, target=3):
 		if target == 1 or target == 3:
-			LogFileName = Common.datestr(format="file")
+			LogFileName = Common.datestr(format="file") + ".log"
 			with open(LogFileName, "a") as myfile:
 				myfile.write(message + "\n")
 		if target == 2 or target == 3: 
