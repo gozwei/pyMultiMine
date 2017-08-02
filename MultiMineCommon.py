@@ -29,7 +29,7 @@ class Common():
 		if target == 1 or target == 3:
 			LogFileName = Common.datestr(format="file") + ".log"
 			with open(LogFileName, "a") as myfile:
-				myfile.write(message + "\n")
+				myfile.write("[{0:s}] ".format(Common.datestr()) + message + "\n")
 		if target == 2 or target == 3: 
 			print(bcolors.OKBLUE + bcolors.BOLD + "[{0:s}] ".format(Common.datestr()) + message + bcolors.ENDC)
 
