@@ -39,23 +39,19 @@ class MultiMine():
 
 				myCoin.CalcProfit()
 
-				Common.Log("Profit 24h: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}$".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
+				Common.Log("Profit 24h: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
 		else:
 			for myCoin in self.coins:
 				if myCoin.Default:
 					myCoin.Profit = 0
 					myCoin.ProfitBTC = 0
-					# with open(LogFileName, "a") as myfile:
-					# 	myfile.write("{0:s}\terror fetching data, mining default\t{1:s}\n".format(datestr(), myCoin.Name))
 				else:
 					myCoin.Profit = -1
 					myCoin.ProfitBTC = -1
 
-
 		self.coins.sort(key=lambda x: x.ProfitBTC, reverse=True)
 
 	def Print(self):
-
 		for myCoin in self.coins:
 			myCoin.Print()
 
@@ -64,20 +60,17 @@ class MultiMine():
 		Common.Log("Attempt to start mining " + CoinToMine.FullName)
 		if CoinToMine.ActiveMining:
 			Common.Log(CoinToMine.FullName + " is already mining")
-			# with open(LogFileName, "a") as myfile:
-			# 	myfile.write("{0:s}\tcontinue\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC))
-			Common.Log("Continue: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}$".format(CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC, CoinToMine.ProfitBTC*self.BTCUSD))
+			Common.Log("Continue: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(CoinToMine.Name, CoinToMine.Profit, CoinToMine.ProfitBTC, CoinToMine.ProfitBTC*self.BTCUSD))
 		else:
 			stopped = False
 			number_running = 0
 			for myCoin in self.coins:
+				myCoin.SetBTCUSD(self.BTCUSD)
 				if myCoin.ActiveMining:
 					number_running += 1
 					if (time.time() - myCoin.ActiveMiningTime) < myCoin.MinimumMineTime:
 						Common.Log("To short time to stop mining ", myCoin.FullName)
-						# with open(LogFileName, "a") as myfile:
-						# 	myfile.write("{0:s}\tcontinue time\t{1:s}\t{2:8.6f}\t{3:8.6f}\n".format(datestr(), myCoin.Name, myCoin.Profit, myCoin.ProfitBTC))
-						Common.Log("Continue time: {0:6s}\t{1:12.6f}\t{2:12.6f}\t{3:12.6f}$".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
+						Common.Log("Continue time: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
 					else:
 						myCoin.StopMining(self.DryRun)
 						stopped = True

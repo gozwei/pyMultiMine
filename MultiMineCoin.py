@@ -14,9 +14,14 @@ class Coin():
 		self.ActiveMining = False
 		self.Default = False
 		self.MinimumMineTime = 3*60
+		self.BTCUSD = 0;
 
 	def SetAsDefault(self):
 		self.Default = True
+
+	def SetBTCUSD(self, BTCUSD):
+		self.BTCUSD = BTCUSD
+
 
 	def SetExecutable(self, executable):
 		self.executable = executable
@@ -31,7 +36,7 @@ class Coin():
 			args = shlex.split(self.executable)
 			if not DryRun:
 				self.process = subprocess.Popen(args)
-			Common.Log("Start: {0:6s}\t{1:12.6f}\t{2:12.6f}".format(self.Name, self.Profit, self.ProfitBTC))
+			Common.Log("Start: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(self.Name, self.Profit, self.ProfitBTC, self.ProfitBTC*self.BTCUSD))
 			self.ActiveMiningTime = time.time()
 
 	def StopMining(self, DryRun):

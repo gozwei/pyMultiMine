@@ -43,7 +43,7 @@ class Common():
 				   'Connection': 'keep-alive'}
 
 			response = urllib.request.Request(url,headers=hdr)
-			response = urllib.request.urlopen(response)
+			response = urllib.request.urlopen(response, timeout=3)
 			html = response.read()
 			return str(html.decode('UTF-8'))
 		except:
