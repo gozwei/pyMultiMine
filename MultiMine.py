@@ -20,15 +20,22 @@ class MultiMine():
 		self.DryRun = True
 
 	def GetBTCUSD(self):
+		Common.Log("DEBUG: MultiMine.GetBTCUSD() 001")
 		html = Common.GetURL("https://api.cryptowat.ch/markets/kraken/btcusd/price")
+		Common.Log("DEBUG: MultiMine.GetBTCUSD() 002")
 		data = json.loads(html)
+		Common.Log("DEBUG: MultiMine.GetBTCUSD() 003")
 		self.BTCUSD = float(data["result"]["price"])
 		Common.Log("BTC/USD: {0:8.4f}".format(self.BTCUSD))
 
 	def GetCoinStats(self):
+		Common.Log("DEBUG: MultiMine.GetCoinStats() 001")
 		html = Common.GetURL("https://www.whattomine.com/coins.json")
+		Common.Log("DEBUG: MultiMine.GetCoinStats() 002")
 		if html != "Error":
+			Common.Log("DEBUG: MultiMine.GetCoinStats() 003")
 			data = json.loads(html)
+			Common.Log("DEBUG: MultiMine.GetCoinStats() 004")
 			for myCoin in self.coins:
 				Difficulty = data["coins"][myCoin.FullName]["difficulty"] 
 				BlockTime = float(data["coins"][myCoin.FullName]["block_time"])
@@ -41,6 +48,7 @@ class MultiMine():
 
 				Common.Log("Profit 24h: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(myCoin.Name, myCoin.Profit, myCoin.ProfitBTC, myCoin.ProfitBTC*self.BTCUSD))
 		else:
+			Common.Log("DEBUG: MultiMine.GetCoinStats() 005")
 			for myCoin in self.coins:
 				if myCoin.Default:
 					myCoin.Profit = 0

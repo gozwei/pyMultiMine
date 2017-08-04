@@ -22,6 +22,8 @@ class Common():
 		ts = time.time()
 		if format == "file":
 			return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+		elif format == "ms":
+			return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
 		else:
 			return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -29,11 +31,12 @@ class Common():
 		if target == 1 or target == 3:
 			LogFileName = Common.datestr(format="file") + ".log"
 			with open(LogFileName, "a") as myfile:
-				myfile.write("[{0:s}] ".format(Common.datestr()) + message + "\n")
+				myfile.write("[{0:s}] ".format(Common.datestr(format="ms")) + message + "\n")
 		if target == 2 or target == 3: 
 			print(bcolors.OKBLUE + bcolors.BOLD + "[{0:s}] ".format(Common.datestr()) + message + bcolors.ENDC)
 
 	def GetURL(url):
+		Common.Log("DEBUG: Common.GetURL() 001:" + url)
 		try:
 			hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
 				   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -41,10 +44,13 @@ class Common():
 				   'Accept-Encoding': 'none',
 				   'Accept-Language': 'en-US,en;q=0.8',
 				   'Connection': 'keep-alive'}
-
+			Common.Log("DEBUG: Common.GetURL() 002:" + url)
 			response = urllib.request.Request(url,headers=hdr)
+			Common.Log("DEBUG: Common.GetURL() 003:", url)
 			response = urllib.request.urlopen(response, timeout=3)
+			Common.Log("DEBUG: Common.GetURL() 004:" + url)
 			html = response.read()
+			Common.Log("DEBUG: Common.GetURL() 005:" + url)
 			return str(html.decode('UTF-8'))
 		except:
 			return "Error"
