@@ -29,24 +29,24 @@ class Coin():
 	def SetMinimumMineTime(self, MinimumMineTime):
 		self.MinimumMineTime = MinimumMineTime
 
-	def StartMining(self, DryRun):
+	def StartMining(self, DryRun, DebugTarget=1):
 		if self.ActiveMining == False:
 			sleep(3)
 			self.ActiveMining = True
 			args = shlex.split(self.executable)
 			if not DryRun:
-				Common.Log("DEBUG: Coin.StartMining() 001:" + self.Name)
+				Common.Log("DEBUG: Coin.StartMining() 001:" + self.Name, target=DebugTarget)
 				self.process = subprocess.Popen(args)
-				Common.Log("DEBUG: Coin.StartMining() 002:" + self.Name)
+				Common.Log("DEBUG: Coin.StartMining() 002:" + self.Name, target=DebugTarget)
 			Common.Log("Start: {0:6s}{1:12.6f}{2:12.6f}\t${3:0,.2f}".format(self.Name, self.Profit, self.ProfitBTC, self.ProfitBTC*self.BTCUSD))
 			self.ActiveMiningTime = time.time()
 
-	def StopMining(self, DryRun):
+	def StopMining(self, DryRun, DebugTarget=1):
 		if self.ActiveMining == True:
 			if not DryRun:
-				Common.Log("DEBUG: Coin.StopMining() 001:" + self.Name)
+				Common.Log("DEBUG: Coin.StopMining() 001:" + self.Name, target=DebugTarget)
 				self.process.terminate()
-				Common.Log("DEBUG: Coin.StopMining() 002:" + self.Name)
+				Common.Log("DEBUG: Coin.StopMining() 002:" + self.Name, target=DebugTarget)
 			self.ActiveMining = False
 			Common.Log("Stop: {0:6s}".format(self.Name))
 

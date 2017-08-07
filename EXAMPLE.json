@@ -2,14 +2,15 @@
 	"config":{
 		"CheckCoinsEvery": 60,
 		"BTCUSDMarket": "kraken",
-		"DryRun": 0
+		"DryRun": 0,
+		"DebugTarget": 0
 	},
 	"coins":{
 		"ZEC":{
 			"FullName": "Zcash",
 			"Default": 1,
 			"Enabled": 1,
-			"Executable": "/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Wa6JG1w3m9d81q78Mg2uockRVZ6vuoE6L.rig1 --pass x --port 3333 --pec --fee 0 --api 10.22.3.84:42555",
+			"Executable": "/home/goto/Documents/0.3.4b/miner --server eu1-zcash.flypool.org --user t1Wa6JG1w3m9d81q78Mg2uockRVZ6vuoE6L.rig1 --pass x --port 3333 --pec --fee 0",
 			"HashRate": 3.4e3,
 			"MinMineTime": 180
 		},

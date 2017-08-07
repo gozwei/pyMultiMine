@@ -22,6 +22,8 @@ MM = MultiMine()
 if Config['config']['DryRun'] == 1:
 	MM.SetDryRun()
 
+MM.SetDebugTarget(Config['config']['DebugTarget'])
+
 for CoinName in Config['coins']:
 	if Config['coins'][CoinName]["Enabled"]:
 		C = Coin(CoinName, Config['coins'][CoinName]["FullName"])
