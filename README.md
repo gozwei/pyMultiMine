@@ -1,7 +1,7 @@
 # pyMultiMine
 *pyMultiMine* is cryptocurrency mining driver that allows switching between different currencies, mining software and algorithms based on current mining profitability. Mining profitability is calculated based on **Net Hash Rate**, **Difficulty**, **Block Time**, **Block Size**, **Exchange rate to BTC** (all from *http://WhatToMine.com*) and computer (mining rig) **Hash Rate** (set individually for all currencies / algorithms). *pyMultiMine* displays profitability in **BTC / day** and **USD / day** based on current BTC to USD exchange rate from http://CryptoWat.ch.
 
-If you find this software usefull, plese say thank you by donating some BTC:
+If you find this software useful, please say thank you by donating some BTC:
 <big><p style="text-align: center;">1DMcHCDus3izk7ia54R6BJfhDaf4visgnT</p></big>
 
 ## TL;DR

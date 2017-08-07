@@ -26,7 +26,7 @@ class MultiMine():
 
 	def PrintDonationMsg(self):
 		if self.DanationCount %10 == 0:
-			Common.Log("MSG: If you find this software usefull, plese say thank you by donating some BTC:")
+			Common.Log("MSG: If you find this software useful, please say thank you by donating some BTC:")
 			Common.Log("MSG: 1DMcHCDus3izk7ia54R6BJfhDaf4visgnT")
 		self.DanationCount += 1
 
